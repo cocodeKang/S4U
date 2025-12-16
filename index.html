@@ -4,188 +4,175 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>S4U</title>
+
   <style>
-    :root{
-      --bg:#0b1020;
-      --fg:#e8ecff;
-      --muted:rgba(232,236,255,.75);
-      --panel:rgba(0,0,0,.35);
-      --border:rgba(255,255,255,.12);
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;
-      background:var(--bg);
-      color:var(--fg);
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Noto Sans KR", sans-serif;
-      overflow:hidden;
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      background: #0b1020;
+      color: #fff;
+      font-family: system-ui, -apple-system, "Noto Sans KR", sans-serif;
+      overflow: hidden;
     }
 
-    header{
-      position:fixed; inset:0 0 auto 0;
-      display:flex; align-items:center; justify-content:space-between;
-      padding:12px 14px;
-      background:linear-gradient(to bottom, rgba(0,0,0,.55), rgba(0,0,0,0));
-      z-index:10;
-      gap:12px;
-      user-select:none;
-    }
-    header .title{
-      font-weight:800;
-      letter-spacing:.06em;
-      font-size:16px;
-    }
-    header .hint{
-      font-size:12px;
-      color:var(--muted);
-      white-space:nowrap;
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      background: rgba(0,0,0,.5);
+      z-index: 10;
     }
 
-    main{
-      height:100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:56px 10px 54px; /* 헤더/푸터 공간 */
-      touch-action:pan-y; /* 좌우 스와이프는 우리가 처리 */
+    header b { letter-spacing: .1em; }
+
+    main {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 10px 60px;
+      touch-action: pan-y;
     }
 
-    .frame{
-      width:min(96vw, 1100px);
-      height:min(78vh, 720px);
-      border:1px solid var(--border);
-      border-radius:16px;
-      background:rgba(255,255,255,.03);
-      box-shadow:0 14px 40px rgba(0,0,0,.35);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      overflow:hidden;
-      position:relative;
+    .viewer {
+      width: min(95vw, 1100px);
+      height: min(80vh, 720px);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
     }
 
-    img{
-      max-width:100%;
-      max-height:100%;
-      width:auto;
-      height:auto;
-      display:block;
-      user-select:none;
-      -webkit-user-drag:none;
-      image-rendering:auto;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
-    .overlay{
-      position:absolute;
-      inset:auto 10px 10px auto;
-      background:var(--panel);
-      border:1px solid var(--border);
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:12px;
-      color:var(--muted);
-      backdrop-filter: blur(6px);
+    .counter {
+      position: absolute;
+      bottom: 12px;
+      right: 14px;
+      font-size: 12px;
+      background: rgba(0,0,0,.5);
+      padding: 6px 10px;
+      border-radius: 20px;
     }
 
-    footer{
-      position:fixed; inset:auto 0 0 0;
-      display:flex; align-items:center; justify-content:center;
-      gap:10px;
-      padding:10px 12px;
-      background:linear-gradient(to top, rgba(0,0,0,.55), rgba(0,0,0,0));
-      z-index:10;
-      user-select:none;
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(0,0,0,.5);
     }
-    button{
-      background:var(--panel);
-      color:var(--fg);
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:10px 14px;
-      font-weight:700;
-      cursor:pointer;
-      backdrop-filter: blur(6px);
+
+    button {
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
     }
-    button:active{transform:translateY(1px)}
-    .small{font-size:12px; color:var(--muted); padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--panel)}
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="title">S4U</div>
-    <div class="hint">←/→ : 이전·다음 · F : 전체화면 · (모바일) 좌우 스와이프</div>
-  </header>
 
-  <main id="stage" aria-label="S4U Image Viewer">
-    <div class="frame" id="frame">
-      <img id="img" alt="S4U image" />
-      <div class="overlay" id="counter"></div>
-    </div>
-  </main>
+<header>
+  <b>S4U</b>
+  <span style="font-size:12px;">← → 이동 · F 전체화면 · 스와이프</span>
+</header>
 
-  <footer>
-    <button id="prevBtn" type="button">◀ 이전</button>
-    <div class="small" id="nameTag"></div>
-    <button id="nextBtn" type="button">다음 ▶</button>
-  </footer>
+<main id="stage">
+  <div class="viewer">
+    <img id="img" />
+    <div class="counter" id="counter"></div>
+  </div>
+</main>
+
+<footer>
+  <button onclick="prev()">◀ 이전</button>
+  <button onclick="next()">다음 ▶</button>
+</footer>
 
 <script>
-  // ✅ 이미지 폴더와 파일 규칙(필요하면 여기만 바꾸면 됨)
-  const IMAGE_DIR = "./image/";
-  const START = 1;
-  const END = 19; // image1.png ~ image19.png
-  const EXT = "png";
-  const files = Array.from({length: END - START + 1}, (_,i) => `image${i+START}.${EXT}`);
+  /* ==============================
+     GitHub RAW 이미지 설정
+  ============================== */
 
-  let idx = 0;
+  const BASE =
+    "https://github.com/cocodeKang/S4U/blob/main/image/";
+
+  const START = 1;
+  const END = 19;
+  const EXT = ".png?raw=true";
+
+  const images = Array.from(
+    { length: END - START + 1 },
+    (_, i) => `${BASE}image${i + START}.png?raw=true`
+  );
+
+  let index = 0;
 
   const img = document.getElementById("img");
   const counter = document.getElementById("counter");
-  const nameTag = document.getElementById("nameTag");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
   const stage = document.getElementById("stage");
 
-  function load(i){
-    idx = (i + files.length) % files.length;
-    const filename = files[idx];
-    img.src = IMAGE_DIR + filename;
-    counter.textContent = `${idx+1} / ${files.length}`;
-    nameTag.textContent = filename;
-    // 로딩 실패 시 다음으로 넘어가게(파일 누락 대비)
-    img.onerror = () => {
-      img.onerror = null;
-      console.warn("이미지 로드 실패:", img.src);
-      // 실패하면 1칸 이동
-      setTimeout(() => load(idx + 1), 150);
-    };
+  function load(i) {
+    index = (i + images.length) % images.length;
+    img.src = images[index];
+    counter.textContent = `${index + 1} / ${images.length}`;
   }
 
-  function next(){ load(idx + 1); }
-  function prev(){ load(idx - 1); }
+  function next() { load(index + 1); }
+  function prev() { load(index - 1); }
 
-  prevBtn.addEventListener("click", prev);
-  nextBtn.addEventListener("click", next);
-
-  // ✅ 키보드: 좌우 + F 전체화면
-  document.addEventListener("keydown", (e) => {
-    // 입력창 포커스일 때는 방해 안 하기
-    const tag = (document.activeElement?.tagName || "").toLowerCase();
-    if (tag === "input" || tag === "textarea") return;
-
-    if (e.key === "ArrowRight") { e.preventDefault(); next(); }
-    if (e.key === "ArrowLeft")  { e.preventDefault(); prev(); }
-    if (e.key === "f" || e.key === "F") { e.preventDefault(); toggleFullscreen(); }
+  /* 키보드 */
+  document.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+    if (e.key === "f" || e.key === "F") toggleFullscreen();
   });
 
-  // ✅ 모바일 스와이프(좌우 슬라이드)
-  let startX = 0, startY = 0, tracking = false;
+  /* 모바일 스와이프 */
+  let startX = 0;
 
-  stage.addEventListener("touchstart", (e) => {
-    if (e.touches.length !== 1) return;
-    tracking = true;
+  stage.addEventListener("touchstart", e => {
     startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-  }, {passive:
+  });
+
+  stage.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (dx > 50) prev();
+    if (dx < -50) next();
+  });
+
+  /* 전체화면 */
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  }
+
+  /* 최초 로드 */
+  load(0);
+</script>
+
+</body>
+</html>
