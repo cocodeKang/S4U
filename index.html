@@ -238,6 +238,15 @@
 document.addEventListener("fullscreenchange", () => {
   fsBtn.textContent = document.fullscreenElement ? "✕" : "⛶";
 });
+function toggleFullscreen() {
+  const viewer = document.querySelector(".viewer");
+
+  if (!document.fullscreenElement) {
+    viewer.requestFullscreen();
+  } else {
+    document.exitFullscreen();
+  }
+}
 
 </script>
 
