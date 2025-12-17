@@ -87,6 +87,21 @@
       font-weight: bold;
       cursor: pointer;
     }
+    #fsBtn {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#fsBtn:active {
+  background: rgba(255,255,255,.3);
+}
+
   </style>
 </head>
 
@@ -94,8 +109,19 @@
 
 <header>
   <b>S4U</b>
-  <span style="font-size:12px;">← → 이동 · F 전체화면 · 스와이프</span>
+
+  <div style="display:flex; align-items:center; gap:12px;">
+    <span style="font-size:12px; opacity:.8;">
+      ← → 이동 · 스와이프
+    </span>
+
+    <!-- 📱 모바일 전체화면 버튼 -->
+    <button id="fsBtn" onclick="toggleFullscreen()" aria-label="전체화면">
+      ⛶
+    </button>
+  </div>
 </header>
+
 
 <main id="stage">
   <div class="viewer">
