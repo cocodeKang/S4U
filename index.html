@@ -198,6 +198,12 @@
 
   /* 최초 로드 */
   load(0);
+  const fsBtn = document.getElementById("fsBtn");
+
+document.addEventListener("fullscreenchange", () => {
+  fsBtn.textContent = document.fullscreenElement ? "✕" : "⛶";
+});
+
 </script>
 
 </body>
