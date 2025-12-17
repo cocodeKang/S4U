@@ -231,22 +231,55 @@
     }
   }
 
-  /* 최초 로드 */
-  load(0);
-  const fsBtn = document.getElementById("fsBtn");
+const fsBtn = document.getElementById("fsBtn");
+const viewer = document.querySelector(".viewer");
 
 document.addEventListener("fullscreenchange", () => {
   fsBtn.textContent = document.fullscreenElement ? "✕" : "⛶";
 });
-function toggleFullscreen() {
-  const viewer = document.querySelector(".viewer");
 
+function toggleFullscreen() {
   if (!document.fullscreenElement) {
     viewer.requestFullscreen();
   } else {
     document.exitFullscreen();
   }
 }
+
+/* ✅ 프리로드 캐시 */
+const cache = new Map();
+
+function preload(i) {
+  const idx = (i + images.length) % images.length;
+  const url = images[idx];
+  if (cache.has(url)) return;
+
+  const im = new Image();
+  im.decoding = "async";
+  im.loading = "eager";     // 힌트(지원 브라우저에서 도움)
+  im.src = url;
+  cache.set(url, im);
+}
+
+/* ✅ load 함수는 "이 버전 하나만" 존재해야 함 */
+function load(i) {
+  index = (i + images.length) % images.length;
+  const url = images[index];
+
+  // 캐시에 있으면 더 빠르게
+  img.src = cache.has(url) ? cache.get(url).src : url;
+  counter.textContent = `${index + 1} / ${images.length}`;
+
+  // 주변 이미지 미리 로드
+  preload(index + 1);
+  preload(index - 1);
+  preload(index + 2);
+}
+
+/* ✅ 최초 로드는 맨 마지막에 */
+load(0);
+preload(1);
+preload(images.length - 1);
 
 </script>
 
