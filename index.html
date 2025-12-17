@@ -101,6 +101,41 @@
 #fsBtn:active {
   background: rgba(255,255,255,.3);
 }
+/* =========================
+   전체화면 전용 스타일
+========================= */
+
+:fullscreen body {
+  background: #000;
+}
+
+/* 헤더·푸터 완전 제거 */
+:fullscreen header,
+:fullscreen footer {
+  display: none !important;
+}
+
+/* 메인 영역 패딩 제거 */
+:fullscreen main {
+  padding: 0 !important;
+}
+
+/* 뷰어를 진짜 전체화면으로 */
+:fullscreen .viewer {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+  border-radius: 0 !important;
+  background: #000 !important;
+}
+
+/* 이미지가 화면을 꽉 채우되 비율 유지 */
+:fullscreen img {
+  width: 100vw;
+  height: 100vh;
+  object-fit: contain; /* 꽉 차게 + 잘림 없음 */
+}
 
   </style>
 </head>
